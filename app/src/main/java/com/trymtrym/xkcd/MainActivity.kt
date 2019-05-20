@@ -20,7 +20,7 @@ import com.trymtrym.xkcd.adapter.ComicsAdapter
 class MainActivity : AppCompatActivity() {
     @Inject lateinit var factory: ComicViewModel.Factory
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: ComicsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var viewModel: ComicViewModel;
 
@@ -31,22 +31,13 @@ class MainActivity : AppCompatActivity() {
         val component = (application as App).component()
         component.inject(this)
 
-
-
         val model = ViewModelProviders.of(this, factory).get(ComicViewModel::class.java)
-/*        model.data().observe(this, Observer {
-            Log.i("observer", it);
-
-        })*/
+        model.data().observe(this, Observer {
+            viewAdapter.replaceDataset(it)
+        })
 
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ComicsAdapter(listOf<String>(
-            "https://imgs.xkcd.com/comics/woodpecker.png",
-            "https://imgs.xkcd.com/comics/conversation.png",
-            "https://imgs.xkcd.com/comics/microdrones.png",
-            "https://imgs.xkcd.com/comics/xkcd_phone_2000.png",
-            "https://imgs.xkcd.com/comics/presidential_succession.png"
-        ).toTypedArray())
+        viewAdapter = ComicsAdapter(arrayOf())
 
         recyclerView = findViewById<RecyclerView>(R.id.comicRecyclerView).apply {
             // use this setting to improve performance if you know that changes

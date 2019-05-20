@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.trymtrym.xkcd.api.ComicApi
 import com.trymtrym.xkcd.api.XkcdApi
+import com.trymtrym.xkcd.data.Comic
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,20 +16,22 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 class ComicViewModel(private val api: ComicApi) : ViewModel() {
-    private val data = MutableLiveData<String>()
+    private val data = MutableLiveData<List<Comic>>()
     private val job = Job()
     private val scope = CoroutineScope(Dispatchers.Main + job)
 
-    fun data(): LiveData<String> = data
+    fun data(): LiveData<List<Comic>> = data
 
     fun requestNewComic() {
-        val randomComicNumber = Random.nextInt(2149)
-        Log.i("comic","Requesting comic number $randomComicNumber")
         scope.launch(Dispatchers.IO) {
-            val joke = api.getComic(randomComicNumber)
-            if (joke.isNotEmpty()) {
-                data.postValue(joke)
+            val list: MutableList<Comic> = mutableListOf()
+            repeat(20) {
+                val comic = api.getComic(Random.nextInt(2149))
+                if(comic != null) {
+                    list.add(comic)
+                }
             }
+            data.postValue(list);
         }
     }
 
