@@ -1,5 +1,6 @@
 package com.trymtrym.xkcd
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ class ComicViewModel(private val api: ComicApi) : ViewModel() {
 
     fun requestNewComic() {
         val randomComicNumber = Random.nextInt(2149)
-        print("Requesting comic number $randomComicNumber")
+        Log.i("comic","Requesting comic number $randomComicNumber")
         scope.launch(Dispatchers.IO) {
             val joke = api.getComic(randomComicNumber)
             if (joke.isNotEmpty()) {

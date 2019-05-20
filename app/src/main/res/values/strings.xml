@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">xkcd</string>
     <string name="newComicButtonLabel">New comic</string>
+    <string name="refreshComics">Reload comics</string>
 </resources>
